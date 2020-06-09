@@ -2,26 +2,35 @@
 """Can be executed by:
    chmod +x dissector.py
    ./dissector -r package.pcap
+
+   Help messages:
+   ./dissector --help
 """
-import sys
+
+import sys, os
+import argparse
+from scapy.all import *
+import re
+
 
 def main(archive):
-    pass
-
-
+    print('Opening {}...'.format(file_name))
+    network_packets = rdpcap(archive)
+ 
+ 
+   
 
 if __name__ == "__main__":
-    param = sys.argv[1:]
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-r', metavar='<pcap file name>',
+                        help='pcap file to parse', required=True)
+    args = parser.parse_args()
+    file_name = args.r
     
-    if len(param):
-        if param[0] == '-r':
-            archive = param[1]
-            main(archive)
-
-        elif param[0] == '--help':
-            print('-r package.pcap')
-            sys.exit(0)
-
-    else:
-        print("Should read as argument a file in pcap format but none was given!")
-        sys.exit(0)
+    if not os.path.isfile(file_name):
+        print('"{}" does not exist'.format(file_name), file=sys.stderr)
+        sys.exit(-1)
+    
+    main(file_name)
+    sys.exit(0)
