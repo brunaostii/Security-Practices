@@ -20,4 +20,4 @@ the development and testing phases.
  - The validation tests for grading will check, among other things,
  if the dissector can extract PE-32 Windows executable files and textual files.
  - The program should compile correctly at the time of grading.
- Failing to do that will yield a 0 (Zero) in the experiment.
+
