@@ -10,14 +10,11 @@
 import sys, os
 import argparse
 from scapy.all import *
-import re
 
 
 def main(archive):
     print('Opening {}...'.format(file_name))
-    network_packets = rdpcap(archive)
- 
- 
+    
    
 
 if __name__ == "__main__":
