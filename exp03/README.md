@@ -1,3 +1,5 @@
+#EXP03
+
 Develop a program that does a bruteforce attack to find the password of a password protected ZIP file.
 
 Your program should expect 2 arguments, -l and -f. -l specifies the dictionary file and -f specifies the ZIP file.

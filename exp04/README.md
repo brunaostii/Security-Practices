@@ -1,3 +1,5 @@
+#EXP04 Traffic-Analysis
+
 The analysis of network traffic is critical in intrusion detection. Here is a file of network traffic in pcap format that corresponds to a real attack to a computer system, from beginning to end. Analyze the traffic file and answer the following questions:
  - Which are the involved systems (IP addresses)?
  - Where are geographically located the attacking hosts?

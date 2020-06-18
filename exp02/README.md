@@ -1,3 +1,4 @@
+#EXP02
 Develop a program in C, called wordharvest, which searches a file hierarchy for files and extract words from them.
 
 The goal is to use the contents of files to compile a list of keywords that could be used in a dictionary attack, assuming local files may contain personal information.
