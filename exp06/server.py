@@ -10,16 +10,22 @@ READ_MAX_LEN = 1024
 class FileChecker(SocketServer.BaseRequestHandler):
 
     def handle(self):
-        # self.request is the TCP socket connected to the client
-        payload_size = int(self.request.recv(8).strip())
-        print('Receiving data: {} bytes...'.format(payload_size))
+        print('Receiving data...')
         payload = ''
-        while payload_size > 0:
-            bytes_read = self.request.recv(READ_MAX_LEN)
-            if bytes_read is not None:
-                payload += bytes_read
-            payload_size -= len(bytes_read)
-            # print('Read {} bytes. Remaining: {}'.format(read_len, payload_size))
+        while True:
+            header = self.request.recv(8)
+            if header == '#####EOF':
+                self.request.sendall('EOF#####')
+                break
+            chunk_len = int(header)
+            chunk_bytes = self.request.recv(chunk_len)
+            if chunk_bytes is not None and chunk_len > 0:
+                payload += chunk_bytes
+            else:
+                print('Connection error: no bytes received')
+                break
+            self.request.sendall('CHUNKRCV')
+            # print('Received chunk:\n{}'.format(chunk_bytes))
         print('Received file!')
         self.request.sendall('FILE_RECEIVED')
         check_hash = hashlib.sha1(payload).digest()

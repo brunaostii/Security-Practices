@@ -5,20 +5,42 @@ HOST = 'localhost'
 PORT = 9999
 SLEEP_TIME = 2
 CONNECTION_TIMEOUT = 2
+CHUNK_SIZE = 1024
+
+
+def send_chunk(sock, chunk):
+    message = '{:8d}'.format(len(chunk))
+    message += chunk
+    sock.send(message)
+    response = sock.recv(1024)
+    return response == 'CHUNKRCV'
+
+
+def send_end_of_file(sock):
+    sock.send('#####EOF')
+    response = sock.recv(1024)
+    return response == 'EOF#####'
 
 
 def main():
     with open('so_tags.csv', 'r') as fp:
         bytes_to_send = fp.read()
-    print(bytes_to_send)
-    while True:
+    error_found = False
+    file_size = len(bytes_to_send)
+    while True and not error_found:
         sock = socket.create_connection((HOST, PORT), timeout=CONNECTION_TIMEOUT)
-        message = '{:8d}'.format(len(bytes_to_send))
-        message += bytes_to_send
-        sock.send(message)
-        response = sock.recv(1024)
-        if response == 'FILE_RECEIVED':
-            print('File sent!')
+        cursor = 0
+        while cursor < file_size:
+            remaining_bytes = file_size - cursor
+            next_chunk_size = min(CHUNK_SIZE, remaining_bytes)
+            if not send_chunk(sock, bytes_to_send[cursor: cursor + next_chunk_size]):
+                print('ERROR SENDING CHUNK')
+                error_found = True
+                break
+            cursor += next_chunk_size
+        if not error_found and not send_end_of_file(sock):
+            print('ERROR ENDING TRANSFER')
+            error_found = True
         sock.close()
         sleep(SLEEP_TIME)
 
