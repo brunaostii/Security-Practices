@@ -7,16 +7,32 @@ PORT = 9999
 READ_MAX_LEN = 1024
 
 
+def check_file(payload):
+    print('Received file!')
+    check_hash = hashlib.sha1(payload).digest()
+    matches = FILE_HASH == check_hash
+    if not matches:
+        print('FILE WAS CORRUPTED')
+        with open('dump.csv', 'w') as dumpfile:
+            dumpfile.write(payload)
+    else:
+        print('FILE CHECKED: NO PROBLEMS DETECTED')
+    print('#########################')
+
+
 class FileChecker(SocketServer.BaseRequestHandler):
 
     def handle(self):
-        print('Receiving data...')
+        print('Receiving data from {}'.format(self.request.getpeername()))
         payload = ''
         while True:
             header = self.request.recv(8)
             if header == '#####EOF':
                 self.request.sendall('EOF#####')
-                break
+                check_file(payload)
+                print('Receiving data from {}'.format(self.request.getpeername()))
+                payload = ''
+                continue
             chunk_len = int(header)
             chunk_bytes = self.request.recv(chunk_len)
             if chunk_bytes is not None and chunk_len > 0:
@@ -26,11 +42,6 @@ class FileChecker(SocketServer.BaseRequestHandler):
                 break
             self.request.sendall('CHUNKRCV')
             # print('Received chunk:\n{}'.format(chunk_bytes))
-        print('Received file!')
-        self.request.sendall('FILE_RECEIVED')
-        check_hash = hashlib.sha1(payload).digest()
-        print('MATCHES: {}'.format(FILE_HASH == check_hash))
-        print('############')
 
 
 if __name__ == "__main__":
