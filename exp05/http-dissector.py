@@ -7,7 +7,6 @@ Students:   Bruna Almeida Osti
 Usage:
    chmod +x dissector.py
    ./dissector -r package.pcap
-
    Help messages:
    ./dissector --help
 #################################
@@ -82,14 +81,19 @@ def main(archive):
         for p in sessions[session]:
             if p.haslayer(HTTP):
                 payload = bytes(p[TCP].payload)
+                
                 try:
                     http_header = payload[payload.index(b"HTTP/1."):payload.index(b"\r\n\r\n") + 2]
+                    
                 except ValueError:
                     http_header = None
+
                 if http_header is None:
                     http_payload += payload
+
                 else:
                     http_header_raw = payload[:payload.index(b"\r\n\r\n") + 2]
+                    
                     if len(http_payload) > 0 and http_header_parsed is not None:
                         extract_payload(http_header_parsed, http_payload)
                         http_payload = b''
@@ -112,4 +116,4 @@ if __name__ == "__main__":
         sys.exit(-1)
 
     main(file_name)
-    sys.exit(0)
+    sys.exit(0)                                                                                                                                                                     
