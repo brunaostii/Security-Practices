@@ -1,10 +1,29 @@
 #!/usr/bin/env python3
-"""Can be executed by:
+"""
+HTTP Dissector
+Students:   Bruna Almeida Osti
+            Rafael Cortez Sanchez
+#################################
+Usage:
    chmod +x dissector.py
    ./dissector -r package.pcap
 
    Help messages:
    ./dissector --help
+#################################
+
+   Esse programa extrai conteudo de mensagens HTTP contidas em um arquivo PCAP.
+   Um diretorio de nome ''extracted'' eh criado no caminho de execucao do script
+   e os arquivos extraidos a partir das mensagens sao armazenados nesse diretorio.
+
+   Alem disso, o script cria um arquivo ''manifest.json'' com informacoes sobre
+   toodo conteudo extraido das mensagens HTTP: uma entrada para cada um dos
+   arquivos em ''extracted''.
+
+   Esse script depende da biblioteca Scapy, a qual pode ser instalado facilmente
+   via pip:
+
+   $pip install scapy
 """
 
 import argparse
