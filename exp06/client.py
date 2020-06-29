@@ -1,3 +1,18 @@
+"""
+MO639 Computer Security
+Experiment 6
+Students: Bruna Almeida Osti
+          Rafael Cortez Sanches
+
+==================
+Client Application
+==================
+
+This side is responsible for sending files to the server through a TCP connection. Files are sent in
+chunks of bytes, their size is defined in the CHUNK_SIZE constant.
+
+More information about this simple file transferring protocol is in server.py
+"""
 import socket
 from time import sleep
 
@@ -6,6 +21,7 @@ PORT = 9999
 SLEEP_TIME = 2
 CONNECTION_TIMEOUT = 5
 CHUNK_SIZE = 1024
+REAL_FILE = 'mensagem.txt'
 
 
 def send_chunk(sock, chunk):
@@ -23,7 +39,7 @@ def send_end_of_file(sock):
 
 
 def main():
-    with open('so_tags.csv', 'r') as fp:
+    with open(REAL_FILE, 'r') as fp:
         bytes_to_send = fp.read()
     error_found = False
     file_size = len(bytes_to_send)
